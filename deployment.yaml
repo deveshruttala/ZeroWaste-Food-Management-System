@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foodwaste-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: foodwaste
+  template:
+    metadata:
+      labels:
+        app: foodwaste
+    spec:
+      containers:
+      - name: foodwaste
+        image: your-dockerhub-username/foodwaste:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foodwaste-service
+spec:
+  selector:
+    app: foodwaste
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

@@ -62,4 +62,5 @@
 * Anurag Jethi
 
 ## Deployed in Azure with devops tools 
+## used tools like jenkins, docker , kubernetes , phpmyadmin, grafana 
 

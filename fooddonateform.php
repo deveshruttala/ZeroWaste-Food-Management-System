@@ -5,7 +5,7 @@ if($_SESSION['name']==''){
 }
 // include("login.php"); 
 $emailid= $_SESSION['email'];
-$connection=mysqli_connect("localhost","root","");
+$connection=mysqli_connect("db","phpmyadmin","phpmyadmin");
 $db=mysqli_select_db($connection,'demo');
 if(isset($_POST['submit']))
 {

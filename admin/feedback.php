@@ -10,7 +10,7 @@ if ($_SESSION['name'] == '') {
 }
 
 // Database connection (using 127.0.0.1 instead of localhost)
-$connection = mysqli_connect("localhost", "phpmyadmin", "phpmyadmin", "demo");  // Change to 127.0.0.1
+$connection = mysqli_connect("db", "phpmyadmin", "phpmyadmin", "demo");  // Change to 127.0.0.1
 
 if (!$connection) {
     die("Connection failed: " . mysqli_connect_error());

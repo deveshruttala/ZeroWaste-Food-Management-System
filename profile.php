@@ -1,5 +1,5 @@
 <?php
-session_start(); // This should be the first line of the PHP code
+session_start(); // Ensure session_start() is called before any output
 
 // Check if the session variables are set
 if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
@@ -7,8 +7,17 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
     exit();
 }
 
-?>
+include("connect.php"); // Include the database connection file
 
+$email = $_SESSION['email'];
+$query = "SELECT * FROM food_donations WHERE email='$email'";
+$result = mysqli_query($connection, $query);
+
+if (!$result) {
+    echo "Error: " . mysqli_error($connection);  // Output any MySQL errors for debugging
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,9 +46,9 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
     </nav>
 </header>
 <script>
-    hamburger=document.querySelector(".hamburger");
-    hamburger.onclick = function() {
-        navBar=document.querySelector(".nav-bar");
+    hamburger = document.querySelector(".hamburger");
+    hamburger.onclick = function () {
+        navBar = document.querySelector(".nav-bar");
         navBar.classList.toggle("active");
     }
 </script>
@@ -71,12 +80,6 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
                     </thead>
                     <tbody>
                         <?php
-                        include("connect.php"); // Make sure you include the database connection here
-
-                        $email = $_SESSION['email'];
-                        $query = "SELECT * FROM food_donations WHERE email='$email'";
-                        $result = mysqli_query($connection, $query);
-
                         if ($result) {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<tr><td>" . $row['food'] . "</td><td>" . $row['type'] . "</td><td>" . $row['category'] . "</td><td>" . $row['date'] . "</td></tr>";

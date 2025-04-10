@@ -1,5 +1,5 @@
 <?php
-// Include necessary files (make sure session is already started in connect.php)
+// Include necessary files
 include '../connection.php';
 include("connect.php");
 
@@ -9,8 +9,8 @@ if ($_SESSION['name'] == '') {
     exit(); // Stop further script execution after the redirect
 }
 
-// Database connection (make sure your credentials are correct)
-$connection = mysqli_connect("localhost", "root", "", "demo"); // Removed the port
+// Database connection (using 127.0.0.1 instead of localhost)
+$connection = mysqli_connect("localhost", "phpmyadmin", "phpmyadmin", "demo");  // Change to 127.0.0.1
 
 if (!$connection) {
     die("Connection failed: " . mysqli_connect_error());

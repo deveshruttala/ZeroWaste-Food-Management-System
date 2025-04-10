@@ -1,70 +1,48 @@
 <?php
 session_start();
-// $connection = mysqli_connect("localhost:3307", "root", "");
-// $db = mysqli_select_db($connection, 'demo');
-include '../connection.php';
-$msg=0;
+include '../connection.php'; // Make sure this includes the correct database connection setup
+$msg = 0; // Initialize message variable for error handling
+
 if (isset($_POST['sign'])) {
-  $email = $_POST['email'];
-  $password = $_POST['password'];
-  $sanitized_emailid =  mysqli_real_escape_string($connection, $email);
-  $sanitized_password =  mysqli_real_escape_string($connection, $password);
-  // $hash=password_hash($password,PASSWORD_DEFAULT);
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    
+    // Sanitize user input to prevent SQL injection
+    $sanitized_emailid = mysqli_real_escape_string($connection, $email);
+    $sanitized_password = mysqli_real_escape_string($connection, $password);
 
-  $sql = "select * from admin where email='$sanitized_emailid'";
-  $result = mysqli_query($connection, $sql);
-  $num = mysqli_num_rows($result);
- 
-  if ($num == 1) {
-    while ($row = mysqli_fetch_assoc($result)) {
-      if (password_verify($sanitized_password, $row['password'])) {
-        $_SESSION['email'] = $email;
-        $_SESSION['name'] = $row['name'];
-        $_SESSION['location'] = $row['location'];
-        $_SESSION['Aid']=$row['Aid'];
-        header("location:admin.php");
-      } else {
-        $msg = 1;
-        // echo '<style type="text/css">
-        // {
-        //     .password input{
-                
-        //         border:.5px solid red;
-                
-                
-        //       }
-
-        // }
-        // </style>';
-        // echo "<h1><center> Login Failed incorrect password</center></h1>";
-      }
+    // Prepare and execute the query securely using a prepared statement
+    $sql = "SELECT * FROM admin WHERE email=?";
+    if ($stmt = mysqli_prepare($connection, $sql)) {
+        // Bind the email parameter
+        mysqli_stmt_bind_param($stmt, "s", $sanitized_emailid);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        
+        if (mysqli_num_rows($result) == 1) {
+            // User found, now check password
+            while ($row = mysqli_fetch_assoc($result)) {
+                if (password_verify($sanitized_password, $row['password'])) {
+                    // Successful login
+                    $_SESSION['email'] = $email;
+                    $_SESSION['name'] = $row['name'];
+                    $_SESSION['location'] = $row['location'];
+                    $_SESSION['Aid'] = $row['Aid'];
+                    header("Location: admin.php");
+                    exit();
+                } else {
+                    // Incorrect password
+                    $msg = 1; // Incorrect password flag
+                }
+            }
+        } else {
+            // User not found
+            $msg = 2; // User does not exist flag
+        }
+    } else {
+        // SQL query preparation failed
+        $msg = 3; // Error flag for SQL issue
     }
-  } else {
-    echo "<h1><center>Account does not exists </center></h1>";
-  }
-
-
-
-
-  // $query="select * from login where email='$email'and password='$password'";
-  // $qname="select name from login where email='$email'and password='$password'";
-
-
-  // if(mysqli_num_rows($query_run)==1)
-  // {
-  // //   $_SESSION['name']=$name;
-
-  //   // echo "<h1><center> Login Sucessful  </center></h1>". $name['gender'] ;
-
-  //   $_SESSION['email']=$email;
-  //   $_SESSION['name']=$name['name'];
-  //   $_SESSION['gender']=$name['gender'];
-  //   header("location:home.html");
-
-  // }
-  // else{
-  //   echo "<h1><center> Login Failed</center></h1>";
-  // }
 }
-?>
 
+?>

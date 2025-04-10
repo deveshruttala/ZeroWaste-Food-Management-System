@@ -1,11 +1,12 @@
 <?php
-session_start();  // Make sure session_start() is at the top of the file
-include("connect.php");  // Ensure that connect.php is included for DB connection
+session_start(); // This should be the first line of the PHP code
 
-if ($_SESSION['name'] == '') {
-    header("location: signup.php");
-    exit();  // Prevent further code execution after redirection
+// Check if the session variables are set
+if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
+    header("Location: signup.php"); // Redirect if the session is not set
+    exit();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -35,11 +36,10 @@ if ($_SESSION['name'] == '') {
         </ul>
     </nav>
 </header>
-
 <script>
-    hamburger = document.querySelector(".hamburger");
+    hamburger=document.querySelector(".hamburger");
     hamburger.onclick = function() {
-        navBar = document.querySelector(".nav-bar");
+        navBar=document.querySelector(".nav-bar");
         navBar.classList.toggle("active");
     }
 </script>
@@ -52,12 +52,11 @@ if ($_SESSION['name'] == '') {
             <p>Name: <?php echo $_SESSION['name']; ?></p><br>
             <p>Email: <?php echo $_SESSION['email']; ?></p><br>
             <p>Gender: <?php echo $_SESSION['gender']; ?></p><br>
-            <a href="logout.php" style="float: left; margin-top: 6px; border-radius: 5px; background-color: #06C167; color: white; padding: 5px 10px;">Logout</a>
+            <a href="logout.php" style="float: left; margin-top: 6px; border-radius: 5px; background-color: #06C167; color: white; padding: 10px;">Logout</a>
         </div>
 
         <hr>
-        <br>
-        <p class="heading">Your Donations</p>
+        <p class="heading">Your donations</p>
 
         <div class="table-container">
             <div class="table-wrapper">
@@ -72,8 +71,10 @@ if ($_SESSION['name'] == '') {
                     </thead>
                     <tbody>
                         <?php
+                        include("connect.php"); // Make sure you include the database connection here
+
                         $email = $_SESSION['email'];
-                        $query = "SELECT * FROM food_donations WHERE email = '$email'";
+                        $query = "SELECT * FROM food_donations WHERE email='$email'";
                         $result = mysqli_query($connection, $query);
 
                         if ($result) {
@@ -85,9 +86,8 @@ if ($_SESSION['name'] == '') {
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>          
     </div>
 </div>
-
 </body>
 </html>

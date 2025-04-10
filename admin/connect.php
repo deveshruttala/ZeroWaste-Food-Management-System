@@ -1,5 +1,8 @@
 <?php
-session_start(); // Ensure session is started at the top
+
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); 
 
 include '../connection.php'; // Ensure this file has the correct database connection details
 

@@ -1,8 +1,5 @@
 <?php
-// Start the session at the very beginning of the file
-session_start();
-
-// Include necessary files
+// Include necessary files (make sure session is already started in connect.php)
 include '../connection.php';
 include("connect.php");
 
@@ -12,8 +9,9 @@ if ($_SESSION['name'] == '') {
     exit(); // Stop further script execution after the redirect
 }
 
-// Database connection
-$connection = mysqli_connect("localhost:3306", "root", "", "demo");
+// Database connection (make sure your credentials are correct)
+$connection = mysqli_connect("localhost", "root", "", "demo"); // Removed the port
+
 if (!$connection) {
     die("Connection failed: " . mysqli_connect_error());
 }

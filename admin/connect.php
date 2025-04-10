@@ -1,7 +1,9 @@
 <?php
-session_start();
-include '../connection.php'; // Make sure this includes the correct database connection setup
-$msg = 0; // Initialize message variable for error handling
+session_start(); // Ensure session is started at the top
+
+include '../connection.php'; // Ensure this file has the correct database connection details
+
+$msg = 0; // Initialize message variable
 
 if (isset($_POST['sign'])) {
     $email = $_POST['email'];
@@ -23,15 +25,15 @@ if (isset($_POST['sign'])) {
             // User found, now check password
             while ($row = mysqli_fetch_assoc($result)) {
                 if (password_verify($sanitized_password, $row['password'])) {
-                    // Successful login
+                    // Successful login, set session variables
                     $_SESSION['email'] = $email;
                     $_SESSION['name'] = $row['name'];
                     $_SESSION['location'] = $row['location'];
                     $_SESSION['Aid'] = $row['Aid'];
+                    // Redirect to the admin dashboard
                     header("Location: admin.php");
-                    exit();
+                    exit(); // Ensure no further code runs after redirect
                 } else {
-                    // Incorrect password
                     $msg = 1; // Incorrect password flag
                 }
             }

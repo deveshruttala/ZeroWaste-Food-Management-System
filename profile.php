@@ -1,6 +1,7 @@
 <?php
-session_start(); // Ensure session_start() is called before any output
-
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); 
+} 
 // Check if the session variables are set
 if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
     header("Location: signup.php"); // Redirect if the session is not set
@@ -16,8 +17,8 @@ $result = mysqli_query($connection, $query);
 if (!$result) {
     echo "Error: " . mysqli_error($connection);  // Output any MySQL errors for debugging
 }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

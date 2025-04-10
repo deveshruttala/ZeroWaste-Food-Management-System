@@ -1,13 +1,11 @@
 <?php
-session_start(); // Start the session at the top
-include("connect.php"); // Include the database connection file
+session_start();  // Make sure session_start() is at the top of the file
+include("connect.php");  // Ensure that connect.php is included for DB connection
 
-// Check if the session variables are set
-if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
-    header("Location: signup.php"); // Redirect if the session is not set
-    exit();
+if ($_SESSION['name'] == '') {
+    header("location: signup.php");
+    exit();  // Prevent further code execution after redirection
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -37,10 +35,11 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
         </ul>
     </nav>
 </header>
+
 <script>
-    hamburger=document.querySelector(".hamburger");
+    hamburger = document.querySelector(".hamburger");
     hamburger.onclick = function() {
-        navBar=document.querySelector(".nav-bar");
+        navBar = document.querySelector(".nav-bar");
         navBar.classList.toggle("active");
     }
 </script>
@@ -53,11 +52,12 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
             <p>Name: <?php echo $_SESSION['name']; ?></p><br>
             <p>Email: <?php echo $_SESSION['email']; ?></p><br>
             <p>Gender: <?php echo $_SESSION['gender']; ?></p><br>
-            <a href="logout.php" style="float: left; margin-top: 6px; border-radius: 5px; background-color: #06C167; color: white; padding: 10px;">Logout</a>
+            <a href="logout.php" style="float: left; margin-top: 6px; border-radius: 5px; background-color: #06C167; color: white; padding: 5px 10px;">Logout</a>
         </div>
 
         <hr>
-        <p class="heading">Your donations</p>
+        <br>
+        <p class="heading">Your Donations</p>
 
         <div class="table-container">
             <div class="table-wrapper">
@@ -72,24 +72,22 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
                     </thead>
                     <tbody>
                         <?php
-                        // Ensure $connection is properly included from connect.php
                         $email = $_SESSION['email'];
-                        $query = "SELECT * FROM food_donations WHERE email='$email'";
+                        $query = "SELECT * FROM food_donations WHERE email = '$email'";
                         $result = mysqli_query($connection, $query);
 
                         if ($result) {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<tr><td>" . $row['food'] . "</td><td>" . $row['type'] . "</td><td>" . $row['category'] . "</td><td>" . $row['date'] . "</td></tr>";
                             }
-                        } else {
-                            echo "<tr><td colspan='4'>No donations found</td></tr>";
                         }
                         ?>
                     </tbody>
                 </table>
             </div>
-        </div>          
+        </div>
     </div>
 </div>
+
 </body>
 </html>

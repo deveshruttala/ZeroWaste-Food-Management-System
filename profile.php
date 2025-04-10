@@ -1,5 +1,6 @@
 <?php
-session_start(); // This should be the first line of the PHP code
+session_start(); // Start the session at the top
+include("connect.php"); // Include the database connection file
 
 // Check if the session variables are set
 if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
@@ -71,8 +72,7 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
                     </thead>
                     <tbody>
                         <?php
-                        include("connect.php"); // Make sure you include the database connection here
-
+                        // Ensure $connection is properly included from connect.php
                         $email = $_SESSION['email'];
                         $query = "SELECT * FROM food_donations WHERE email='$email'";
                         $result = mysqli_query($connection, $query);
@@ -81,6 +81,8 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] == '') {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<tr><td>" . $row['food'] . "</td><td>" . $row['type'] . "</td><td>" . $row['category'] . "</td><td>" . $row['date'] . "</td></tr>";
                             }
+                        } else {
+                            echo "<tr><td colspan='4'>No donations found</td></tr>";
                         }
                         ?>
                     </tbody>
